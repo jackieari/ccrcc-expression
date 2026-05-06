@@ -30,6 +30,7 @@ DELAY = 0.4  # seconds between requests (NCBI: 3 req/sec without API key)
 # ---------------------------------------------------------------------------
 
 def esearch(db: str, term: str, retmax: int = 50) -> list[str]:
+    """Run an Entrez esearch and return the list of matching UID strings."""
     handle = Entrez.esearch(db=db, term=term, retmax=retmax)
     record = Entrez.read(handle)
     handle.close()
@@ -134,6 +135,7 @@ def get_accession(gene: str) -> str | None:
 
 
 def fetch_sequence(accession: str) -> SeqIO.SeqRecord:
+    """Fetch a single FASTA record from NCBI nuccore by accession string."""
     handle = Entrez.efetch(
         db="nuccore", id=accession, rettype="fasta", retmode="text"
     )

@@ -87,6 +87,7 @@ def load_annotations() -> pd.DataFrame:
 
 
 def annotate_results(path: Path, annotations: pd.DataFrame) -> pd.DataFrame:
+    """Merge gene-symbol/biotype annotations into a DESeq2 results CSV by base Ensembl ID."""
     df = pd.read_csv(path)
     df["gene_base"] = df["gene"].map(strip_version)
     df = df.merge(annotations, on="gene_base", how="left")
@@ -98,6 +99,7 @@ def annotate_results(path: Path, annotations: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_volcano_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Add neg_log10_padj and a volcano_group classification column for plotting."""
     df = df.copy()
     positive_padj = df.loc[df["padj"] > 0, "padj"]
     padj_floor = positive_padj.min() / 10
@@ -118,6 +120,7 @@ def add_volcano_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def make_volcano_plot(df: pd.DataFrame) -> None:
+    """Render a scatter volcano plot and save as both PNG and PDF."""
     df = add_volcano_columns(df.dropna(subset=["log2FoldChange", "padj"]))
 
     colors = {
@@ -177,6 +180,7 @@ def make_volcano_plot(df: pd.DataFrame) -> None:
 
 
 def main() -> None:
+    """Annotate both result files and produce the volcano plot."""
     annotations = load_annotations()
     print(f"Loaded {len(annotations):,} gene annotations")
 

@@ -29,6 +29,7 @@ SUMMARY_PREFIXES = ("N_unmapped", "N_multimapping", "N_noFeature", "N_ambiguous"
 
 
 def load_counts(tsv_path: str, sample_id: str) -> pd.Series:
+    """Read one sample's STAR counts TSV, drop summary rows, return as a named Series."""
     df = pd.read_csv(
         tsv_path,
         sep="\t",
@@ -44,6 +45,7 @@ def load_counts(tsv_path: str, sample_id: str) -> pd.Series:
 
 
 def main():
+    """Discover all sample TSVs under DATA_DIR, load them, and write a genes×samples CSV."""
     pattern = os.path.join(DATA_DIR, "*", "*.rna_seq.augmented_star_gene_counts.tsv")
     tsv_files = sorted(glob.glob(pattern))
 
